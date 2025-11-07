@@ -1,0 +1,16 @@
+# Ignore build outputs
+*.exe
+*.dll
+*.pdb
+*.lib
+*.a
+
+# Ignore OpenCV / Boost libs
+lib/opencv-mingw/
+lib/boost_1_89_0/
+
+# Ignore temp files
+*.log
+*.tmp
+*.swp
+.vscode/

@@ -1,0 +1,36 @@
+@echo off
+REM ================================
+REM Build script for comp_net client
+REM ================================
+
+REM 1. Cấu hình compiler path
+set COMPILER=C:\msys64\mingw64\bin\g++.exe
+
+REM 2. Include paths
+set BOOST_INC=lib\boost_1_89_0
+set OPENCV_INC=lib\opencv-mingw\include
+
+REM 3. Library paths
+set OPENCV_LIB=lib\opencv-mingw\x64\mingw\lib
+
+REM 4. Output file name
+set OUTPUT=client.exe
+
+REM 5. Compile and link
+echo Building %OUTPUT% ...
+"%COMPILER%" client.cpp -o %OUTPUT% ^
+ -I%BOOST_INC% ^
+ -I%OPENCV_INC% ^
+ -L%OPENCV_LIB% ^
+ -lopencv_core455 -lopencv_highgui455 -lopencv_videoio455 -lopencv_imgproc455 ^
+ -lws2_32 -luser32 -lgdi32 -lcomdlg32 -lole32 -loleaut32 -luuid -static-libstdc++ -static-libgcc
+
+IF %ERRORLEVEL% NEQ 0 (
+    echo Build failed!
+    pause
+    exit /b %ERRORLEVEL%
+) ELSE (
+    echo Build successful! Output: %OUTPUT%
+)
+
+pause
