@@ -1,6 +1,6 @@
 @echo off
 REM ================================
-REM Build script for comp_net client
+REM Build script for comp_net client & server
 REM ================================
 
 REM 1. Cấu hình compiler path
@@ -13,12 +13,34 @@ set OPENCV_INC=lib\opencv-mingw\include
 REM 3. Library paths
 set OPENCV_LIB=lib\opencv-mingw\x64\mingw\lib
 
-REM 4. Output file name
-set OUTPUT=client.exe
+REM 4. Output file names
+set CLIENT_OUTPUT=client.exe
+set SERVER_OUTPUT=server.exe
 
-REM 5. Compile and link
-echo Building %OUTPUT% ...
-"%COMPILER%" client.cpp -o %OUTPUT% ^
+REM =====================================
+REM Build SERVER
+REM =====================================
+echo Building %SERVER_OUTPUT% ...
+"%COMPILER%" server.cpp -o %SERVER_OUTPUT% ^
+ -I%BOOST_INC% ^
+ -lws2_32 ^
+ -static-libstdc++ -static-libgcc
+
+IF %ERRORLEVEL% NEQ 0 (
+    echo Server build failed!
+    pause
+    exit /b %ERRORLEVEL%
+) ELSE (
+    echo Server build successful! Output: %SERVER_OUTPUT%
+)
+
+echo.
+
+REM =====================================
+REM Build CLIENT
+REM =====================================
+echo Building %CLIENT_OUTPUT% ...
+"%COMPILER%" client.cpp -o %CLIENT_OUTPUT% ^
  -I%BOOST_INC% ^
  -I%OPENCV_INC% ^
  -L%OPENCV_LIB% ^
@@ -26,11 +48,18 @@ echo Building %OUTPUT% ...
  -lws2_32 -luser32 -lgdi32 -lcomdlg32 -lole32 -loleaut32 -luuid -static-libstdc++ -static-libgcc
 
 IF %ERRORLEVEL% NEQ 0 (
-    echo Build failed!
+    echo Client build failed!
     pause
     exit /b %ERRORLEVEL%
 ) ELSE (
-    echo Build successful! Output: %OUTPUT%
+    echo Client build successful! Output: %CLIENT_OUTPUT%
 )
+
+echo.
+echo =====================================
+echo Build completed successfully!
+echo Server: %SERVER_OUTPUT%
+echo Client: %CLIENT_OUTPUT%
+echo =====================================
 
 pause
